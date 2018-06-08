@@ -5111,13 +5111,13 @@ public class RecyclerView extends ViewGroup implements ScrollingView, NestedScro
          * false for all other views of its type for the same deadline. This prevents items
          * constructed by {@link GapWorker} prefetch from being bound to a lower priority prefetch.
          */
-        static class ScrapData {
-            ArrayList<ViewHolder> mScrapHeap = new ArrayList<>();
+        public static class ScrapData {
+            public ArrayList<ViewHolder> mScrapHeap = new ArrayList<>();
             int mMaxScrap = DEFAULT_MAX_SCRAP;
             long mCreateRunningAverageNs = 0;
             long mBindRunningAverageNs = 0;
         }
-        SparseArray<ScrapData> mScrap = new SparseArray<>();
+        public SparseArray<ScrapData> mScrap = new SparseArray<>();
 
         private int mAttachCount = 0;
 

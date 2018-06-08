@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 //import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,10 +54,15 @@ public class ScrollingActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recycler_view);
         linearLayoutManager = new PreCachingMoreLayoutManager(this);
+
+        //为了调试方便, 先关闭prefetch功能
+        linearLayoutManager.setItemPrefetchEnabled(false);
 //        linearLayoutManager.setExtraLayoutSpace(getResources().getDisplayMetrics().heightPixels*8);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(new MyAdapter());
 //        recyclerView.setItemViewCacheSize(20);
+
+
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -110,7 +116,27 @@ public class ScrollingActivity extends AppCompatActivity {
         info.append("mCachedViews:");
         debugScrap(recycler.mCachedViews, info);
         info.append("\r\n");
+
+
+        RecyclerView.RecycledViewPool recycledViewPool = recyclerView.getRecycledViewPool();
+//        recycledViewPool.clear();
+        debugRecycledViewPool(recycledViewPool, info);
+
+
         infoTv.setText(info.toString());
+    }
+
+    private void debugRecycledViewPool(RecyclerView.RecycledViewPool recycledViewPool, StringBuilder info) {
+        SparseArray<RecyclerView.RecycledViewPool.ScrapData> mScrap = recycledViewPool.mScrap;
+        String str = "";
+        for (int i = 0; i < mScrap.size(); i++) {
+            RecyclerView.RecycledViewPool.ScrapData data = mScrap.valueAt(i);
+            ArrayList<RecyclerView.ViewHolder> mScrapHeap = data.mScrapHeap;
+            info.append(i+"=");
+            debugScrap(mScrapHeap, info);
+            info.append(",");
+        }
+        info.append("\r\n");
     }
 
     private void debugScrap(ArrayList<RecyclerView.ViewHolder> scrap, StringBuilder sb){
@@ -123,7 +149,7 @@ public class ScrollingActivity extends AppCompatActivity {
             }
             str += "" + viewHolder.mPosition;
         }
-        sb.append(scrap.size()+":["+str+"]");
+        sb.append("["+str+"]");
     }
 
     class PagerAdapter extends FragmentPagerAdapter {
