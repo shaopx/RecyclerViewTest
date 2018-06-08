@@ -1,6 +1,7 @@
 package com.spx.recyclerviewtest.app;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -12,6 +13,7 @@ import com.spx.recyclerviewtest.R;
  */
 
 public class MyLayoutData extends LayoutData {
+    private static final String TAG = "MyLayoutData";
     public String title;
     @Override
     public int getItemLayoutId() {
@@ -32,6 +34,7 @@ public class MyLayoutData extends LayoutData {
 
         @Override
         public void bindData(Context context, LayoutData layoutData, int position) {
+            Log.d(TAG, "bindData: position:"+position);
             MyLayoutData myLayoutData = (MyLayoutData) layoutData;
             titleTv.setText(myLayoutData.title);
         }

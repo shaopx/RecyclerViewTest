@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     public static List<String> data = new ArrayList<>();
     static {
-        for (int l = 0; l < 1000; l++) {
+        for (int l = 0; l < 10; l++) {
             data.add("data_"+l);
         }
     }
