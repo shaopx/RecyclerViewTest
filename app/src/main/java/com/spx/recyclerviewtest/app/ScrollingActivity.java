@@ -32,6 +32,8 @@ public class ScrollingActivity extends AppCompatActivity {
     private List<String> data = new ArrayList<>();
 //    protected ViewPager mViewPager;
 
+    private TextView infoTv;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,9 +42,10 @@ public class ScrollingActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         for (int i = 0; i < 30; i++) {
-            data.add("afsdfbasfd["+i + "]");
+            data.add("afsdfbasfd[" + i + "]");
         }
 
+        infoTv = findViewById(R.id.info_tv);
 
 //        mViewPager = findViewById(R.id.view_pager);
 //        mViewPager.setAdapter(new PagerAdapter(getSupportFragmentManager()));
@@ -78,8 +81,50 @@ public class ScrollingActivity extends AppCompatActivity {
 //                }
             }
         });
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    debugRecyclerViewInfo();
+                    try {
+                        Thread.sleep(50);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        }).start();
     }
 
+    private void debugRecyclerViewInfo() {
+//        Log.d(TAG, "debugRecyclerViewInfo: ");
+        RecyclerView.Recycler recycler = recyclerView.mRecycler;
+        StringBuilder info = new StringBuilder();
+        ArrayList<RecyclerView.ViewHolder> mAttachedScrap = recycler.mAttachedScrap;
+
+        info.append("mAttachedScrap:");
+        debugScrap(mAttachedScrap, info);
+        info.append("\r\n");
+        info.append("mCachedViews:");
+        debugScrap(recycler.mCachedViews, info);
+        info.append("\r\n");
+        infoTv.setText(info.toString());
+    }
+
+    private void debugScrap(ArrayList<RecyclerView.ViewHolder> scrap, StringBuilder sb){
+        String str = "";
+        for (int i = 0; i < scrap.size(); i++) {
+            RecyclerView.ViewHolder viewHolder = scrap.get(i);
+
+            if (i > 0) {
+                str += ",";
+            }
+            str += "" + viewHolder.mPosition;
+        }
+        sb.append(scrap.size()+":["+str+"]");
+    }
 
     class PagerAdapter extends FragmentPagerAdapter {
 
@@ -132,7 +177,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull MyHolder holder, int position) {
-            Log.w(TAG, "onBindViewHolder: ...."+position);
+            Log.w(TAG, "onBindViewHolder: ...." + position);
             holder.textView.setText(data.get(position));
         }
 

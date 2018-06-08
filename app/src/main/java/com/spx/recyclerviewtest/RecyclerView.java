@@ -278,7 +278,7 @@ public class RecyclerView extends ViewGroup implements ScrollingView, NestedScro
 
     private final RecyclerViewDataObserver mObserver = new RecyclerViewDataObserver();
 
-    final Recycler mRecycler = new Recycler();
+    public final Recycler mRecycler = new Recycler();
 
     private SavedState mPendingSavedState;
 
@@ -5324,20 +5324,20 @@ public class RecyclerView extends ViewGroup implements ScrollingView, NestedScro
      * may be repositioned by a LayoutManager without remeasurement.</p>
      */
     public final class Recycler {
-        final ArrayList<ViewHolder> mAttachedScrap = new ArrayList<>();
+        public final ArrayList<ViewHolder> mAttachedScrap = new ArrayList<>();
         ArrayList<ViewHolder> mChangedScrap = null;
 
-        final ArrayList<ViewHolder> mCachedViews = new ArrayList<ViewHolder>();
+        public final ArrayList<ViewHolder> mCachedViews = new ArrayList<ViewHolder>();
 
-        private final List<ViewHolder>
+        public  final List<ViewHolder>
                 mUnmodifiableAttachedScrap = Collections.unmodifiableList(mAttachedScrap);
 
-        private int mRequestedCacheMax = DEFAULT_CACHE_SIZE;
+        public  int mRequestedCacheMax = DEFAULT_CACHE_SIZE;
         int mViewCacheMax = DEFAULT_CACHE_SIZE;
 
-        RecycledViewPool mRecyclerPool;
+        public  RecycledViewPool mRecyclerPool;
 
-        private ViewCacheExtension mViewCacheExtension;
+        public  ViewCacheExtension mViewCacheExtension;
 
         static final int DEFAULT_CACHE_SIZE = 2;
 
@@ -5839,6 +5839,7 @@ public class RecyclerView extends ViewGroup implements ScrollingView, NestedScro
          * Public version un-scraps before calling recycle.
          */
         void recycleViewHolderInternal(ViewHolder holder) {
+            Log.d(TAG, "recycleViewHolderInternal: ...."+holder.mPosition);
             if (holder.isScrap() || holder.itemView.getParent() != null) {
                 throw new IllegalArgumentException(
                         "Scrapped or attached views may not be recycled. isScrap:"
@@ -10285,10 +10286,10 @@ public class RecyclerView extends ViewGroup implements ScrollingView, NestedScro
     public abstract static class ViewHolder {
         public final View itemView;
         WeakReference<RecyclerView> mNestedRecyclerView;
-        int mPosition = NO_POSITION;
-        int mOldPosition = NO_POSITION;
+        public int mPosition = NO_POSITION;
+        public int mOldPosition = NO_POSITION;
         long mItemId = NO_ID;
-        int mItemViewType = INVALID_TYPE;
+        public int mItemViewType = INVALID_TYPE;
         int mPreLayoutPosition = NO_POSITION;
 
         // The item that this holder is shadowing during an item change event/animation
