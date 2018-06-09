@@ -2,6 +2,7 @@ package com.spx.recyclerviewtest.app;
 
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -34,6 +35,8 @@ public class ScrollingActivity extends AppCompatActivity {
 //    protected ViewPager mViewPager;
 
     private TextView infoTv;
+
+    private Handler uiHandler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +110,7 @@ public class ScrollingActivity extends AppCompatActivity {
     private void debugRecyclerViewInfo() {
 //        Log.d(TAG, "debugRecyclerViewInfo: ");
         RecyclerView.Recycler recycler = recyclerView.mRecycler;
-        StringBuilder info = new StringBuilder();
+        final StringBuilder info = new StringBuilder();
         ArrayList<RecyclerView.ViewHolder> mAttachedScrap = recycler.mAttachedScrap;
 
         info.append("mAttachedScrap:");
@@ -122,8 +125,13 @@ public class ScrollingActivity extends AppCompatActivity {
 //        recycledViewPool.clear();
         debugRecycledViewPool(recycledViewPool, info);
 
+        uiHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                infoTv.setText(info.toString());
+            }
+        });
 
-        infoTv.setText(info.toString());
     }
 
     private void debugRecycledViewPool(RecyclerView.RecycledViewPool recycledViewPool, StringBuilder info) {
